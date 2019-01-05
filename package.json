@@ -1,0 +1,90 @@
+{
+  "name": "vscode-ast",
+  "displayName": "vscode-ast",
+  "description": "JavaScript / TypeScript Abstract Syntax Tree",
+  "version": "0.0.2",
+  "publisher": "ddot",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.30.0"
+  },
+  "icon": "resources/ast.png",
+  "bugs": "https://github.com:Jetsly/vscode-ast/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jetsly/vscode-ast.git"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "Ast",
+    "typescript"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+		"onLanguage:javascriptreact",
+    "onLanguage:typescript",
+		"onLanguage:typescriptreact"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "ast - Ast configuration",
+      "properties": {
+        "ast.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable/disable this extension"
+        }
+      }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "ast.views.explorer",
+          "name": "ast explorer",
+          "when": "astEnable"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "ast.views.explorer.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "ast.views.explorer.refreshEntry",
+          "when": "view == ast.views.explorer",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "yarn run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.1.4",
+    "vscode": "^1.1.25",
+    "tslint": "^5.8.0",
+    "@types/node": "^8.10.25",
+    "@types/mocha": "^2.2.42"
+  },
+  "dependencies": {
+    "typescript": "^3.1.4"
+  }
+}
