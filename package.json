@@ -2,17 +2,17 @@
   "name": "vscode-ast",
   "displayName": "vscode-ast",
   "description": "JavaScript / TypeScript Abstract Syntax Tree",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "ddot",
   "license": "MIT",
   "engines": {
     "vscode": "^1.30.0"
   },
   "icon": "resources/ast.png",
-  "bugs": "https://github.com:Jetsly/vscode-ast/issues",
+  "bugs": "https://github.com/vscode-box/vscode-ast/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jetsly/vscode-ast.git"
+    "url": "https://github.com/vscode-box/vscode-ast.git"
   },
   "categories": [
     "Programming Languages",
@@ -23,6 +23,7 @@
     "typescript"
   ],
   "activationEvents": [
+    "onView:ast.views.explorer",
     "onLanguage:javascript",
 		"onLanguage:javascriptreact",
     "onLanguage:typescript",
@@ -37,7 +38,7 @@
         "ast.enable": {
           "type": "boolean",
           "default": true,
-          "description": "enable/disable this extension"
+          "description": "enable/disable Ast extension"
         }
       }
     },
@@ -52,7 +53,7 @@
     },
     "commands": [
       {
-        "command": "ast.views.explorer.refreshEntry",
+        "command": "ast.views.explorer.action.refreshEntry",
         "title": "Refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
@@ -63,7 +64,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "ast.views.explorer.refreshEntry",
+          "command": "ast.views.explorer.action.refreshEntry",
           "when": "view == ast.views.explorer",
           "group": "navigation"
         }

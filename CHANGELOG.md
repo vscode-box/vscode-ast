@@ -3,7 +3,7 @@ All notable changes to the "vscode-ast" extension will be documented in this fil
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [0.0.2]
+## [0.0.2-0.0.3]
 - Add autoscroll view to middle place when select AST token
 
 ## [0.0.1]

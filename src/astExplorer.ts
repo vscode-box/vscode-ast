@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as ts from 'typescript';
 
-export const SELECTION_CODE = 'ast.views.explorer.selection-code';
+export const COMMAND_SELECTION = 'ast.views.explorer.action.selection';
+export const COMMAND_REFRESH = 'ast.views.explorer.action.refreshEntry';
 
 export function syntaxKindToName(kind: ts.SyntaxKind) {
   return ts.SyntaxKind[kind];
@@ -74,7 +75,13 @@ export class AstModel {
 export class AstTreeDataProvider implements vscode.TreeDataProvider<AstNode> {
   private _onDidChangeTreeData: vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
   readonly onDidChangeTreeData: vscode.Event<any> = this._onDidChangeTreeData.event;
-  constructor(private readonly model: AstModel) {}
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly model: AstModel = new AstModel()
+  ) {
+    this.context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => this.didChange()));
+    this.context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(() => this.didChange()));
+  }
   public refresh(): any {
     this._onDidChangeTreeData.fire();
   }
@@ -84,8 +91,8 @@ export class AstTreeDataProvider implements vscode.TreeDataProvider<AstNode> {
       label: `${syntaxKindToName(element.kind)} (${element.pos},${element.end})`,
       collapsibleState: element.isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : void 0,
       command: {
-        title: 'Selection',
-        command: SELECTION_CODE,
+        title: '',
+        command: COMMAND_SELECTION,
         arguments: [element.pos, element.end],
       },
     };
@@ -93,5 +100,22 @@ export class AstTreeDataProvider implements vscode.TreeDataProvider<AstNode> {
 
   public getChildren(element?: AstNode): AstNode[] | Thenable<AstNode[]> {
     return element ? this.model.getChildren(element) : this.model.roots;
+  }
+
+  public didChange() {
+    const isEnable = vscode.workspace.getConfiguration('ast').get('enable');
+    if (
+      isEnable &&
+      vscode.window.activeTextEditor &&
+      vscode.window.activeTextEditor.document.uri.scheme === 'file' &&
+      ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'].indexOf(
+        vscode.window.activeTextEditor.document.languageId
+      ) > -1
+    ) {
+      vscode.commands.executeCommand('setContext', 'astEnable', true);
+      this.refresh();
+    } else {
+      vscode.commands.executeCommand('setContext', 'astEnable', false);
+    }
   }
 }
